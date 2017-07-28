@@ -122,10 +122,7 @@ class Api extends CI_Controller {
 
         $keluarga->anggota_keluarga = $this->db->get_where('penduduk', array('no_kk'=> $keluarga->no_kk))->result();
 
-        echo "<pre>";
-        var_dump($keluarga);
-        exit();
-        $data = json_encode($tes);
+        $data = json_encode($keluarga);
         echo $data;
     }
 }
