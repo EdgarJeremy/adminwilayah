@@ -1,5 +1,3 @@
-<!-- Jquery Core Js -->
-<script src="<?php echo base_url("/assets/plugins/jquery/jquery.min.js");?>"></script>
 
 <!-- Bootstrap Core Js -->
 <script src="<?php echo base_url("/assets/plugins/bootstrap/js/bootstrap.js");?>"></script>
@@ -47,11 +45,19 @@
 <!-- Jquery Validation Plugin Css -->
 <script src="<?php echo base_url("/assets/plugins/jquery-validation/jquery.validate.js");?>"></script>
 
+
+<!-- Bootstrap Notify Plugin Js -->
+<script src="<?php echo base_url("/assets/plugins/bootstrap-notify/bootstrap-notify.js");?>"></script>
+
 <!-- Custom Js -->
 <script src="<?php echo base_url("/assets/js/admin.js");?>"></script>
 
 <!-- Demo Js -->
 <script src="<?php echo base_url("/assets/js/demo.js");?>"></script>
+
+<!-- Pages Js -->
+<script src="<?php echo base_url("/assets/js/pages.js");?>"></script>
+
 </body>
 
 </html>

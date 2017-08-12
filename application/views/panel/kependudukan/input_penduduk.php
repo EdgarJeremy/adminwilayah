@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            FORMULIR KTP
+                            FORMULIR KEPENDUDUKAN
                         </h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
@@ -27,7 +27,7 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <form class="form-horizontal" id="form_advanced_validation">
+                        <form class="form-horizontal" id="form_advanced_validation" method="post">
                             <div class="row clearfix">
                                 <div class="col-md-6">
                                     <div class="row clearfix">
@@ -47,12 +47,12 @@
                                     </div>
                                     <div class="row clearfix">
                                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                            <label for="nomor_ktp">No. KTP</label>
+                                            <label for="no_ktp">No. KTP</label>
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input id="nomor_ktp" type="number" class="form-control" name="nomor_ktp"
+                                                    <input id="no_ktp" type="number" class="form-control" name="no_ktp"
                                                            maxlength="16" minlength="16" required>
                                                     <label class="form-label">Isi No. KTP</label>
                                                 </div>
@@ -98,9 +98,24 @@
                                             <div class="form-group">
                                                 <select class="form-control show-tick" name="jenis_kelamin" required>
                                                     <option value="">Pilih</option>
-                                                    <option value="L">Laki-Laki</option>
-                                                    <option value="P">Perempuan</option>
+                                                    <option value="1">Laki-Laki</option>
+                                                    <option value="2">Perempuan</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="id_golongan_darah">Golongan Darah</label>
+                                        </div>
+                                        <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <select class="form-control show-tick" name="id_golongan_darah" data-live-search="true" required>
+                                                    <option value="">Pilih</option>
+                                                    <?php foreach($golongan_darah as $item): ?>
+                                                        <option value="<?php echo $item->id_golongan_darah; ?>"><?php echo $item->nama_golongan_darah; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select><hr style="margin: 5px 0 10px 0;"/>
                                             </div>
                                         </div>
                                     </div>
@@ -112,27 +127,12 @@
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                             <div class="form-group">
-                                                <select class="form-control show-tick" name="agama" required>
+                                                <select class="form-control show-tick" name="id_agama" data-live-search="true" required>
                                                     <option value="">Pilih</option>
-                                                    <option value="Islam">Islam</option>
-                                                    <option value="Kristen Protestan">Kristen Protestan</option>
-                                                    <option value="Kristen Katholik">Kristen Katholik</option>
-                                                    <option value="Hindu">Hindu</option>
-                                                    <option value="Buddha">Buddha</option>
-                                                    <option value="Konghuchu">Konghuchu</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                            <label for="sudah_bekerja">Status Pekerjaan</label>
-                                        </div>
-                                        <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                                            <div class="form-group">
-                                                <input type="checkbox" id="sudah_bekerja" name="sudah_bekerja"
-                                                       class="filled-in">
-                                                <label for="sudah_bekerja">Sudah Bekerja</label>
+                                                    <?php foreach($agama as $item): ?>
+                                                        <option value="<?php echo $item->id_agama; ?>"><?php echo $item->nama_agama; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select><hr style="margin: 5px 0 10px 0;"/>
                                             </div>
                                         </div>
                                     </div>
@@ -141,13 +141,28 @@
                                             <label for="pekerjaan">Pekerjaan</label>
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input id="pekerjaan" type="text" class="form-control"
-                                                           name="pekerjaan" maxlength="255" disabled required>
-                                                    <label class="form-label">Isi tempat kerja</label>
-                                                </div>
-                                                <div class="help-info">Field Teks (Max: 255)</div>
+                                            <div class="form-group">
+                                                <select class="form-control show-tick" name="id_pekerjaan" data-live-search="true" required>
+                                                    <option value="">Pilih</option>
+                                                    <?php foreach($pekerjaan as $item): ?>
+                                                        <option value="<?php echo $item->id_pekerjaan; ?>"><?php echo $item->nama_pekerjaan; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select><hr style="margin: 5px 0 10px 0;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="id_pendidikan">Pendidikan</label>
+                                        </div>
+                                        <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <select class="form-control show-tick" name="id_pendidikan" data-live-search="true" required>
+                                                    <option value="">Pilih</option>
+                                                    <?php foreach($pendidikan as $item): ?>
+                                                        <option value="<?php echo $item->id_pendidikan; ?>"><?php echo $item->nama_pendidikan; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select><hr style="margin: 5px 0 10px 0;"/>
                                             </div>
                                         </div>
                                     </div>
@@ -157,20 +172,38 @@
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                             <div class="form-group">
-                                                <input type="checkbox" id="sudah_kawin" name="sudah_kawin"
-                                                       class="filled-in">
-                                                <label for="sudah_kawin">Sudah Kawin</label>
+                                                <select class="form-control show-tick" name="id_status_kawin" data-live-search="true" required>
+                                                    <option value="">Pilih</option>
+                                                    <?php foreach($status_kawin as $item): ?>
+                                                        <option value="<?php echo $item->id_status_kawin; ?>"><?php echo $item->nama_status_kawin; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select><hr style="margin: 5px 0 10px 0;"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row clearfix">
                                         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                                            <label for="nomor_kk">No. KK</label>
+                                            <label for="id_hubungan_keluarga">Hubungan Keluarga</label>
+                                        </div>
+                                        <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                                            <div class="form-group">
+                                                <select class="form-control show-tick" name="id_hubungan_keluarga" data-live-search="true" required>
+                                                    <option value="">Pilih</option>
+                                                    <?php foreach($hubungan_keluarga as $item): ?>
+                                                        <option value="<?php echo $item->id_hubungan_keluarga; ?>"><?php echo $item->nama_hubungan_keluarga; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select><hr style="margin: 5px 0 10px 0;"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                                            <label for="no_kk">No. KK</label>
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input id="nomor_kk" type="number" class="form-control" name="nomor_kk"
+                                                    <input id="no_kk" type="number" class="form-control" name="no_kk"
                                                            maxlength="16" minlength="16" required>
                                                     <label class="form-label">Isi No. KK</label>
                                                 </div>
@@ -180,7 +213,7 @@
                                     </div>
                                     <div class="row clearfix">
                                         <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-                                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">SIMPAN</button>
+                                            <button type="submit" name="btnSubmit" class="btn btn-primary m-t-15 waves-effect">SIMPAN</button>
                                             <button type="reset" class="btn btn-danger m-t-15 waves-effect">KOSONGKAN</button>
                                         </div>
                                     </div>

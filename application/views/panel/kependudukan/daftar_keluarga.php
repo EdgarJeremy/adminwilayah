@@ -36,7 +36,6 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>#</th>
                                 <th>Nama Kepala Keluarga</th>
                                 <th>No. KK</th>
                                 <th>No. Rumah</th>
@@ -44,28 +43,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php for($i=0;$i<20;$i++):?>
+                            <?php foreach($data as $key=>$keluarga):?>
                             <tr>
-                                <th scope="row"><?php echo $i++;?></th>
-                                <td>Mark</td>
-                                <td>7171032208980003</td>
-                                <td>20</td>
+                                <td><?php echo $keluarga->nama_kepemilikan; ?></td>
+                                <td><?php echo $keluarga->no_kk; ?></td>
+                                <td><?php echo $keluarga->no_rumah; ?></td>
                                 <td>
                                     <button type="button" class="btn bg-blue waves-effect">DETAIL</button>
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row"><?php echo $i++;?></th>
-                                <td>Jacob</td>
-                                <td>7171032786544432</td>
-                                <td>21</td>
-                                <td>
-                                    <button type="button" class="btn bg-blue waves-effect">DETAIL</button>
-                                </td>
-                            </tr>
-                            <?php endfor;?>
+                            <?php endforeach;?>
                             </tbody>
                         </table>
+                        <?php echo $this->pagination->create_links(); ?>
                     </div>
                 </div>
             </div>

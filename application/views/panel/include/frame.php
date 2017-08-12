@@ -42,15 +42,20 @@
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="<?php echo base_url("/assets/css/themes/all-themes.css");?>" rel="stylesheet"/>
 
+    <!-- Jquery Core Js -->
+    <script src="<?php echo base_url("/assets/plugins/jquery/jquery.min.js");?>"></script>
+
     <script>
         window.base_url = function(dir) {
-            if(dir == undefined)
+            if(dir === undefined)
                 return "<?php echo base_url();?>";
             else
                 return "<?php echo base_url();?>" + "/" + dir;
         };
         window.current_page = "<?php echo $this->uri->segment(2); ?>";
     </script>
+
+
 </head>
 
 <body class="theme-light-green">
@@ -67,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <p>Please wait...</p>
+        <p>Memuat...</p>
     </div>
 </div>
 <!-- #END# Page Loader -->
@@ -308,18 +313,28 @@
                 <img src="<?php echo base_url("/assets/images/user.png");?>" width="48" height="48" alt="User"/>
             </div>
             <div class="info-container">
-                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">EdgarJeremy</div>
-                <div class="email">System Administrator</div>
+                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $this->session->userdata("nama_lengkap"); ?></div>
+                <div class="email">
+                    <?php
+                    if($this->session->userdata("level") == "Pala") {
+                        echo $this->session->userdata("level") . " " . $this->session->userdata("nama_kelurahan");
+                    } else if($this->session->userdata("level") == "Lurah") {
+                        echo $this->session->userdata("level") . " " . $this->session->userdata("nama_kelurahan");
+                    } else if($this->session->userdata("level") == "Camat") {
+                        echo $this->session->userdata("level") . " " . $this->session->userdata("nama_kecamatan");
+                    } else {
+                        echo $this->session->userdata("level");
+                    }
+                    ?>
+                </div>
                 <div class="btn-group user-helper-dropdown">
                     <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                     <ul class="dropdown-menu pull-right">
                         <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
                         <li role="seperator" class="divider"></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
+                        <li><a href="javascript:void(0);"><i class="material-icons">group</i>Grup</a></li>
                         <li role="seperator" class="divider"></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                        <li><a href="<?php echo base_url("/panel/logout/"); ?>"><i class="material-icons">input</i>Keluar</a></li>
                     </ul>
                 </div>
             </div>
