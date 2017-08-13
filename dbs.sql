@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2017 at 12:02 PM
+-- Generation Time: Aug 13, 2017 at 04:00 PM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -4891,15 +4891,16 @@ CREATE TABLE `profil` (
   `idkelurahan` int(10) UNSIGNED DEFAULT NULL,
   `idlingkungan` int(11) DEFAULT NULL,
   `tahun` year(4) DEFAULT NULL,
-  `triwulan` enum('1','2','3','4') DEFAULT NULL
+  `triwulan` enum('1','2','3','4') DEFAULT NULL,
+  `id_pengguna` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `profil`
 --
 
-INSERT INTO `profil` (`id_profil`, `luas_kawasan`, `latitude`, `longitude`, `jumlah_bangunan`, `jumlah_lahan`, `jumlah_bangunan_ber_imb`, `desc_karakteristik_wilayah`, `urt_sampah_terangkut`, `desc_urt_sampah_terangkut`, `kws_bebas_banjir`, `desc_kws_bebas_banjir`, `kws_mengalami_banjir`, `desc_kws_mengalami_banjir`, `saluran_tidak_memadai`, `desc_saluran_tidak_memadai`, `urt_bersanitasi`, `desc_urt_bersanitasi`, `urt_air_minum`, `desc_urt_air_minum`, `urt_air_bersih`, `desc_urt_air_bersih`, `kws_proteksi_kebakaran`, `desc_kws_proteksi_kebakaran`, `jln_akses_pemadam`, `desc_jln_akses_pemadam`, `desc_permasalahan_utama`, `idkecamatan`, `idkelurahan`, `idlingkungan`, `tahun`, `triwulan`) VALUES
-(2, 32, 1.4915002625659983, 1.24843533830152, 764, 891, 278, 'Kumuh padat perkotaan di sekitar bantaran sungai', 3, '', 5.95, '', 1.05, '', 1550, '', 326, '', 326, '', 311, '', 290, 'dgdfg', 1573.77, '', 'Lorem ipsum\r\nLorem ipsum\r\nLorem ipsum\r\nLorem ipsum\r\nLorem ipsum\r\nLorem ipsum', 4, 35, NULL, 2017, '3');
+INSERT INTO `profil` (`id_profil`, `luas_kawasan`, `latitude`, `longitude`, `jumlah_bangunan`, `jumlah_lahan`, `jumlah_bangunan_ber_imb`, `desc_karakteristik_wilayah`, `urt_sampah_terangkut`, `desc_urt_sampah_terangkut`, `kws_bebas_banjir`, `desc_kws_bebas_banjir`, `kws_mengalami_banjir`, `desc_kws_mengalami_banjir`, `saluran_tidak_memadai`, `desc_saluran_tidak_memadai`, `urt_bersanitasi`, `desc_urt_bersanitasi`, `urt_air_minum`, `desc_urt_air_minum`, `urt_air_bersih`, `desc_urt_air_bersih`, `kws_proteksi_kebakaran`, `desc_kws_proteksi_kebakaran`, `jln_akses_pemadam`, `desc_jln_akses_pemadam`, `desc_permasalahan_utama`, `idkecamatan`, `idkelurahan`, `idlingkungan`, `tahun`, `triwulan`, `id_pengguna`) VALUES
+(2, 32, 1.4915002625659983, 1.24843533830152, 764, 891, 278, 'Kumuh padat perkotaan di sekitar bantaran sungai', 3, '', 5.95, '', 1.05, '', 1550, '', 326, '', 326, '', 311, '', 290, 'dgdfg', 1573.77, '', 'Kurangnya kesadaran masyarakat akan pentingnya perilaku hidup sehat dan bersih.\r\nKawasan rawan banjir.\r\nKetidakberdayaan masyarakat berpenghasilan rendah dalam pemenuhan rumah yang legal, sehat dan layak huni.\r\nKetidaksesuaian peruntukan lahan di daerah bantaran sungai.\r\nJalan yang tidak sesuai dengan persyaratan teknis yang tidak memiliki saluran.\r\nKonstruksi saluran yang tidak memadai.\r\nPembuangan sampai di sungai.\r\nTingkat kepadatan bangunan yang tinggi.', 4, 35, NULL, 2017, '3', 6);
 
 -- --------------------------------------------------------
 
@@ -5014,7 +5015,8 @@ ALTER TABLE `profil`
   ADD PRIMARY KEY (`id_profil`),
   ADD KEY `fk_profil_kecamatan1_idx` (`idkecamatan`),
   ADD KEY `fk_profil_kelurahan1_idx` (`idkelurahan`),
-  ADD KEY `fk_profil_lingkungan1_idx` (`idlingkungan`);
+  ADD KEY `fk_profil_lingkungan1_idx` (`idlingkungan`),
+  ADD KEY `fk_profil_pengguna1_idx` (`id_pengguna`);
 
 --
 -- Indexes for table `status_kawin`
@@ -5116,7 +5118,8 @@ ALTER TABLE `pengguna`
 ALTER TABLE `profil`
   ADD CONSTRAINT `fk_profil_kecamatan1` FOREIGN KEY (`idkecamatan`) REFERENCES `kecamatan` (`idkecamatan`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_profil_kelurahan1` FOREIGN KEY (`idkelurahan`) REFERENCES `kelurahan` (`idkelurahan`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_profil_lingkungan1` FOREIGN KEY (`idlingkungan`) REFERENCES `lingkungan` (`idlingkungan`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_profil_lingkungan1` FOREIGN KEY (`idlingkungan`) REFERENCES `lingkungan` (`idlingkungan`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_profil_pengguna1` FOREIGN KEY (`id_pengguna`) REFERENCES `pengguna` (`id_pengguna`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
