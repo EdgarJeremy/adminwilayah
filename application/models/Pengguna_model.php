@@ -20,9 +20,9 @@ class Pengguna_model extends CI_Model {
                 kelurahan.nama_kelurahan,
                 lingkungan.nama_lingkungan
             ")
-            ->join("kecamatan","pengguna.idkecamatan = kecamatan.idkecamatan")
-            ->join("kelurahan","pengguna.idkelurahan = kelurahan.idkelurahan")
-            ->join("lingkungan","pengguna.idlingkungan = lingkungan.idlingkungan")
+            ->join("kecamatan","pengguna.idkecamatan = kecamatan.idkecamatan","left")
+            ->join("kelurahan","pengguna.idkelurahan = kelurahan.idkelurahan","left")
+            ->join("lingkungan","pengguna.idlingkungan = lingkungan.idlingkungan","left")
             ->get_where("pengguna",array(
                 "username" => $username,
                 "password" => md5($password)

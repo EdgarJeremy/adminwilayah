@@ -23,6 +23,7 @@ class Panel extends CI_Controller
         $this->load->model("Pendidikan_model", "pendidikan");
         $this->load->model("Penduduk_model", "penduduk");
         $this->load->model("Status_kawin_model", "status_kawin");
+        $this->load->model("Wilayah_model", "wilayah");
         $this->load->library("pagination");
     }
 
@@ -46,7 +47,7 @@ class Panel extends CI_Controller
         );
 
         $jumlahData = $this->penduduk->hitung_penduduk();
-        $pgConfig = $this->get_pagination_config(base_url("/panel/daftar_penduduk/"),$jumlahData);
+        $pgConfig = $this->get_pagination_config(base_url("/panel/daftar_penduduk/"), $jumlahData);
         $this->pagination->initialize($pgConfig);
 
         if (isset($_GET["q"]))
@@ -59,11 +60,12 @@ class Panel extends CI_Controller
         $this->load->view("panel/include/footer");
     }
 
-    public function detail_penduduk($id_penduduk = null) {
-        if($id_penduduk == null)
+    public function detail_penduduk($id_penduduk = null)
+    {
+        if ($id_penduduk == null)
             redirect(base_url("/panel/daftar_penduduk"));
         $config = Array(
-            "menu" => $this->active_menu("kependudukan","daftar_penduduk"),
+            "menu" => $this->active_menu("kependudukan", "daftar_penduduk"),
             "title" => "Detail Penduduk"
         );
 
@@ -75,8 +77,8 @@ class Panel extends CI_Controller
         $golongan_darah = $this->golongan_darah->ambil_golongan_darah();
         $hubungan_keluarga = $this->hubungan_keluarga->ambil_hubungan_keluarga();
 
-        $this->load->view("panel/include/frame",$config);
-        $this->load->view("panel/kependudukan/detail_penduduk",compact("data","pekerjaan","pendidikan","agama","status_kawin","golongan_darah","hubungan_keluarga"));
+        $this->load->view("panel/include/frame", $config);
+        $this->load->view("panel/kependudukan/detail_penduduk", compact("data", "pekerjaan", "pendidikan", "agama", "status_kawin", "golongan_darah", "hubungan_keluarga"));
         $this->load->view("panel/include/footer");
     }
 
@@ -84,7 +86,7 @@ class Panel extends CI_Controller
     {
         /*---------- Form input submit ---------*/
         /*--------------------------------------*/
-        $this->onButtonSubmit(function(){
+        $this->onButtonSubmit(function () {
             $this->onPostInvalid([
                 "nama",
                 "no_ktp",
@@ -98,8 +100,8 @@ class Panel extends CI_Controller
                 "id_golongan_darah",
                 "id_hubungan_keluarga",
                 "id_status_kawin"
-            ],function($invalidKey) {
-                set_flash_notif("form_error","Isi field " . $invalidKey . "!");
+            ], function ($invalidKey) {
+                set_flash_notif("form_error", "Isi field " . $invalidKey . "!");
                 redirect(base_url("/panel/input_penduduk"));
             });
             $post = $this->input->post();
@@ -117,14 +119,13 @@ class Panel extends CI_Controller
                 $post["id_hubungan_keluarga"],
                 $post["id_status_kawin"]
             );
-            if($insert) {
-                set_flash_notif("form_success","Data berhasil terinput di database!");
+            if ($insert) {
+                set_flash_notif("form_success", "Data berhasil terinput di database!");
                 redirect(base_url("/panel/input_penduduk"));
             } else {
-                set_flash_notif("form_error","Database error");
+                set_flash_notif("form_error", "Database error");
                 redirect(base_url("/panel/input_penduduk"));
             }
-
         });
         /*--------------------------------------*/
         /*---------- END form input submit ---------*/
@@ -141,7 +142,7 @@ class Panel extends CI_Controller
         $hubungan_keluarga = $this->hubungan_keluarga->ambil_hubungan_keluarga();
 
         $this->load->view("panel/include/frame", $config);
-        $this->load->view("panel/kependudukan/input_penduduk",compact("pekerjaan","pendidikan","agama","status_kawin","golongan_darah","hubungan_keluarga"));
+        $this->load->view("panel/kependudukan/input_penduduk", compact("pekerjaan", "pendidikan", "agama", "status_kawin", "golongan_darah", "hubungan_keluarga"));
         $this->load->view("panel/include/footer");
     }
 
@@ -152,7 +153,7 @@ class Panel extends CI_Controller
             "title" => "Daftar Keluarga"
         );
         $jumlahData = $this->keluarga->hitung_keluarga();
-        $pgConfig = $this->get_pagination_config(base_url("/panel/daftar_keluarga/"),$jumlahData);
+        $pgConfig = $this->get_pagination_config(base_url("/panel/daftar_keluarga/"), $jumlahData);
         $this->pagination->initialize($pgConfig);
 
         $data = $this->keluarga->ambil_keluarga($pgConfig["per_page"], $page);
@@ -162,16 +163,110 @@ class Panel extends CI_Controller
         $this->load->view("panel/include/footer");
     }
 
-    public function logout()
+    public function profil_wilayah($triwulan = null)
     {
-        $this->session->sess_destroy();
-        redirect(base_url("/login"));
+        $triwulan = ($triwulan == null) ? ceil(date("m",time())/3) : $triwulan;
+        if ($triwulan > 4 || $triwulan < 1) {
+            set_flash_notif("input_error", "triwulan tidak valid!");
+            redirect(base_url("/panel/profil_wilayah/"));
+            exit();
+        }
+
+        /*---------- Form input submit ---------*/
+        /*--------------------------------------*/
+        $this->onButtonSubmit(function () {
+            $this->onPostInvalid([
+                "luas_kawasan",
+                "latitude",
+                "longitude",
+                "jumlah_bangunan",
+                "jumlah_lahan",
+                "jumlah_bangunan_ber_imb",
+                "desc_karakteristik_wilayah",
+                "urt_sampah_terangkut",
+                "kws_bebas_banjir",
+                "kws_mengalami_banjir",
+                "saluran_tidak_memadai",
+                "urt_bersanitasi",
+                "urt_air_minum",
+                "urt_air_bersih",
+                "kws_proteksi_kebakaran",
+                "jln_akses_pemadam",
+                "desc_permasalahan_utama"
+            ], function ($invalidKey) {
+                set_flash_notif("form_error", "Isi field " . $invalidKey . "!");
+                redirect(base_url("/panel/profil_wilayah"));
+            });
+            $post = $this->input->post();
+            $current_triwulan = ceil(date("m", time()) / 3);
+            if ($post["triwulan"] != $current_triwulan) {
+                set_flash_notif("input_error", "triwulan sudah berlalu!");
+                redirect(base_url("/panel/profil_wilayah/"));
+                exit();
+            }
+            $condition = $this
+                ->wilayah
+                ->simpan_profil_wilayah(
+                    $post["luas_kawasan"],
+                    $post["latitude"],
+                    $post["longitude"],
+                    $post["jumlah_bangunan"],
+                    $post["jumlah_lahan"],
+                    $post["jumlah_bangunan_ber_imb"],
+                    $post["desc_karakteristik_wilayah"],
+                    $post["urt_sampah_terangkut"],
+                    $post["desc_urt_sampah_terangkut"],
+                    $post["kws_bebas_banjir"],
+                    $post["desc_kws_bebas_banjir"],
+                    $post["kws_mengalami_banjir"],
+                    $post["desc_kws_mengalami_banjir"],
+                    $post["saluran_tidak_memadai"],
+                    $post["desc_saluran_tidak_memadai"],
+                    $post["urt_bersanitasi"],
+                    $post["desc_urt_bersanitasi"],
+                    $post["urt_air_minum"],
+                    $post["desc_urt_air_minum"],
+                    $post["urt_air_bersih"],
+                    $post["desc_urt_air_bersih"],
+                    $post["kws_proteksi_kebakaran"],
+                    $post["desc_kws_proteksi_kebakaran"],
+                    $post["jln_akses_pemadam"],
+                    $post["desc_jln_akses_pemadam"],
+                    $post["desc_permasalahan_utama"],
+                    $post["triwulan"]
+                );
+            if ($condition) {
+                set_flash_notif("form_success", "Data profil berhasil diupdate!");
+                redirect(base_url("/panel/profil_wilayah/"));
+            } else {
+                set_flash_notif("form_error", "Data profil gagal diupdate!");
+                redirect(base_url("/panel/profil_wilayah/"));
+            }
+        });
+        /*--------------------------------------*/
+        /*---------- END form input submit ---------*/
+
+        $config = Array(
+            "menu" => $this->active_menu("wilayah","profil_wilayah"),
+            "title" => "Profil Wilayah"
+        );
+        $data = $this->wilayah->ambil_profil_wilayah(null,null,$triwulan);
+
+        $this->load->view("panel/include/frame",$config);
+        $this->load->view("panel/wilayah/profil_wilayah",compact("data","triwulan"));
+        $this->load->view("panel/include/footer");
     }
 
-    public function import()
-    {
-        $😢 = "edgard";
-        echo $😢;
+public
+function logout()
+{
+    $this->session->sess_destroy();
+    redirect(base_url("/login"));
+}
+
+public
+function import()
+{
 //        $file = fopen(base_url("/assets/files/biowni.csv"),"r");
 //        $result = [];
 //        $b = [];
@@ -206,131 +301,145 @@ class Panel extends CI_Controller
 //        var_dump($result);
 ////        var_dump($b);
 //        $this->db->insert_batch("penduduk",$result);
-    }
+}
 
-    /*--- Ajax endpoints ---*/
-    public function ambil_flash_notif() {
-        if($this->input->is_ajax_request()) {
-            $notif = get_flash_notif();
-            sendJSON($notif);
-        }
+/*--- Ajax endpoints ---*/
+public
+function ambil_flash_notif()
+{
+    if ($this->input->is_ajax_request()) {
+        $notif = get_flash_notif();
+        sendJSON($notif);
     }
+}
 
-    /*--- Fungsi konfig / triggered ---*/
-    protected function active_menu($parent, $child = null)
-    {
-        $menus = Array(
-            "dashboard" => Array(
-                "current" => "",
-                "childs" => Array()
-            ),
-            "kependudukan" => Array(
-                "current" => "",
-                "childs" => Array(
-                    "daftar_penduduk" => "",
-                    "input_penduduk" => "",
-                    "daftar_keluarga" => "",
-                    "input_keluarga" => "",
-                    "histori" => ""
-                )
-            ),
-            "pekerjaan" => Array(
-                "current" => "",
-                "childs" => Array(
-                    "daftar_pekerjaan" => "",
-                    "input_pekerjaan" => ""
-                )
-            ),
-            "pendidikan" => Array(
-                "current" => "",
-                "childs" => Array(
-                    "daftar_pendidikan" => "",
-                    "input_pendidikan" => ""
-                )
-            ),
-            "wilayah" => Array(
-                "current" => "",
-                "childs" => Array()
-            ),
-            "pengguna" => Array(
-                "current" => "",
-                "childs" => Array(
-                    "daftar_pengguna" => "",
-                    "input_pengguna" => ""
-                )
+/*--- Fungsi konfig / triggered ---*/
+protected
+function active_menu($parent, $child = null)
+{
+    $menus = Array(
+        "dashboard" => Array(
+            "current" => "",
+            "childs" => Array()
+        ),
+        "kependudukan" => Array(
+            "current" => "",
+            "childs" => Array(
+                "daftar_penduduk" => "",
+                "input_penduduk" => "",
+                "daftar_keluarga" => "",
+                "input_keluarga" => "",
+                "histori" => ""
             )
-        );
+        ),
+        "pekerjaan" => Array(
+            "current" => "",
+            "childs" => Array(
+                "daftar_pekerjaan" => "",
+                "input_pekerjaan" => ""
+            )
+        ),
+        "pendidikan" => Array(
+            "current" => "",
+            "childs" => Array(
+                "daftar_pendidikan" => "",
+                "input_pendidikan" => ""
+            )
+        ),
+        "wilayah" => Array(
+            "current" => "",
+            "childs" => Array(
+                "profil_wilayah" => "",
+                "permasalahan_wilayah" => ""
+            )
+        ),
+        "pengguna" => Array(
+            "current" => "",
+            "childs" => Array(
+                "daftar_pengguna" => "",
+                "input_pengguna" => ""
+            )
+        )
+    );
 
-        if (isset($menus[$parent])) {
-            if (count($menus[$parent]["childs"]) != 0 && $child == null)
-                exit("Sertakan child menu");
+    if (isset($menus[$parent])) {
+        if (count($menus[$parent]["childs"]) != 0 && $child == null)
+            exit("Sertakan child menu");
 
-            if ($child != null) {
-                if (!isset($menus[$parent]["childs"][$child])) {
-                    exit("Child menu tidak ditemukan");
-                }
-            }
-        } else {
-            exit("Parent menu tidak ditemukan");
-        }
-
-
-        $menus[$parent]["current"] = "active";
-        $menus[$parent]["childs"][$child] = "active";
-
-        return $menus;
-    }
-    private function get_pagination_config($base_url,$total,$per_page = 10,$uri_segment = 3) {
-        $pgConfig = [];
-        $pgConfig["enable_query_strings"] = true;
-        $pgConfig["suffix"] = "?q=" . $this->input->get("q");
-        $pgConfig["first_url"] = $base_url . "?q=" . $this->input->get("q");
-        $pgConfig["base_url"] = $base_url;
-        $pgConfig["total_rows"] = $total;
-        $pgConfig["per_page"] = $per_page;
-        $pgConfig["uri_segment"] = $uri_segment;
-
-        $pgConfig['full_tag_open'] = '<ul class="pagination">';
-        $pgConfig['full_tag_close'] = '</ul><!--pagination-->';
-        $pgConfig['first_link'] = '&laquo; Halaman Awal';
-        $pgConfig['first_tag_open'] = '<li class="prev page">';
-        $pgConfig['first_tag_close'] = '</li>';
-        $pgConfig['last_link'] = 'Halaman Akhir &raquo;';
-        $pgConfig['last_tag_open'] = '<li class="next page">';
-        $pgConfig['last_tag_close'] = '</li>';
-        $pgConfig['next_link'] = 'Berikut &rarr;';
-        $pgConfig['next_tag_open'] = '<li class="next page">';
-        $pgConfig['next_tag_close'] = '</li>';
-        $pgConfig['prev_link'] = '&larr; Sebelum';
-        $pgConfig['prev_tag_open'] = '<li class="prev page">';
-        $pgConfig['prev_tag_close'] = '</li>';
-        $pgConfig['cur_tag_open'] = '<li class="active"><a href="">';
-        $pgConfig['cur_tag_close'] = '</a></li>';
-        $pgConfig['num_tag_open'] = '<li class="page">';
-        $pgConfig['num_tag_close'] = '</li>';
-        return $pgConfig;
-    }
-
-    private function onButtonSubmit($callback,$btnName = "btnSubmit") {
-        if(isset($_POST[$btnName])) {
-            $callback();
-            exit();
-        }
-    }
-    private function onPostInvalid($keys,$callback) {
-        $invalid = false;
-        $invalidKey = null;
-        foreach($keys as $key) {
-            if(!berisi($this->input->post($key))) {
-                $invalid = true;
-                $invalidKey = $key;
-                break;
+        if ($child != null) {
+            if (!isset($menus[$parent]["childs"][$child])) {
+                exit("Child menu tidak ditemukan");
             }
         }
-        if($invalid) {
-            $callback($invalidKey);
-            exit();
-        }
-
+    } else {
+        exit("Parent menu tidak ditemukan");
     }
+
+
+    $menus[$parent]["current"] = "active";
+    $menus[$parent]["childs"][$child] = "active";
+
+    return $menus;
+}
+
+private
+function get_pagination_config($base_url, $total, $per_page = 10, $uri_segment = 3)
+{
+    $pgConfig = [];
+    $pgConfig["enable_query_strings"] = true;
+    $pgConfig["suffix"] = "?q=" . $this->input->get("q");
+    $pgConfig["first_url"] = $base_url . "?q=" . $this->input->get("q");
+    $pgConfig["base_url"] = $base_url;
+    $pgConfig["total_rows"] = $total;
+    $pgConfig["per_page"] = $per_page;
+    $pgConfig["uri_segment"] = $uri_segment;
+
+    $pgConfig['full_tag_open'] = '<ul class="pagination">';
+    $pgConfig['full_tag_close'] = '</ul><!--pagination-->';
+    $pgConfig['first_link'] = '&laquo; Halaman Awal';
+    $pgConfig['first_tag_open'] = '<li class="prev page">';
+    $pgConfig['first_tag_close'] = '</li>';
+    $pgConfig['last_link'] = 'Halaman Akhir &raquo;';
+    $pgConfig['last_tag_open'] = '<li class="next page">';
+    $pgConfig['last_tag_close'] = '</li>';
+    $pgConfig['next_link'] = 'Berikut &rarr;';
+    $pgConfig['next_tag_open'] = '<li class="next page">';
+    $pgConfig['next_tag_close'] = '</li>';
+    $pgConfig['prev_link'] = '&larr; Sebelum';
+    $pgConfig['prev_tag_open'] = '<li class="prev page">';
+    $pgConfig['prev_tag_close'] = '</li>';
+    $pgConfig['cur_tag_open'] = '<li class="active"><a href="">';
+    $pgConfig['cur_tag_close'] = '</a></li>';
+    $pgConfig['num_tag_open'] = '<li class="page">';
+    $pgConfig['num_tag_close'] = '</li>';
+    return $pgConfig;
+}
+
+private
+function onButtonSubmit($callback, $btnName = "btnSubmit")
+{
+    if (isset($_POST[$btnName])) {
+        $callback();
+        exit();
+    }
+}
+
+private
+function onPostInvalid($keys, $callback)
+{
+    $invalid = false;
+    $invalidKey = null;
+    foreach ($keys as $key) {
+        if (!berisi($this->input->post($key))) {
+            $invalid = true;
+            $invalidKey = $key;
+            break;
+        }
+    }
+    if ($invalid) {
+        $callback($invalidKey);
+        exit();
+    }
+
+}
 }

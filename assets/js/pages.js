@@ -3,7 +3,6 @@
 /* Index Page */
 if (current_page === "" || current_page === "index") {
 
-    console.log(1);
     $(function () {
         //Widgets count
         $('.count-to').countTo();
@@ -129,64 +128,7 @@ if (current_page === "" || current_page === "index") {
 
 /* Input Penduduk Page */
 if (current_page === "input_penduduk") {
-    $(function () {
-        $('#form_validation').validate({
-            rules: {
-                'checkbox': {
-                    required: true
-                },
-                'gender': {
-                    required: true
-                }
-            },
-            highlight: function (input) {
-                $(input).parents('.form-line').addClass('error');
-            },
-            unhighlight: function (input) {
-                $(input).parents('.form-line').removeClass('error');
-            },
-            errorPlacement: function (error, element) {
-                $(element).parents('.form-group').append(error);
-            }
-        });
 
-        //Advanced Form Validation
-        $('#form_advanced_validation').validate({
-            rules: {
-                'date': {
-                    customdate: true
-                },
-                'creditcard': {
-                    creditcard: true
-                }
-            },
-            highlight: function (input) {
-                $(input).parents('.form-line').addClass('error');
-            },
-            unhighlight: function (input) {
-                $(input).parents('.form-line').removeClass('error');
-            },
-            errorPlacement: function (error, element) {
-                $(element).parents('.form-group').append(error);
-            }
-        });
-
-        //Custom Validations ===============================================================================
-        //Date
-        $.validator.addMethod('customdate', function (value, element) {
-                return value.match(/^\d\d\d\d?-\d\d?-\d\d$/);
-            },
-            'Please enter a date in the format YYYY-MM-DD.'
-        );
-
-        //Credit card
-        $.validator.addMethod('creditcard', function (value, element) {
-                return value.match(/^\d\d\d\d?-\d\d\d\d?-\d\d\d\d?-\d\d\d\d$/);
-            },
-            'Please enter a credit card in the format XXXX-XXXX-XXXX-XXXX.'
-        );
-        //==================================================================================================
-    });
 
     $(function () {
         $('.datepicker').bootstrapMaterialDatePicker({
@@ -219,16 +161,52 @@ if (current_page === "daftar_penduduk") {
     })
 }
 
+/* Profil Wilayah */
+if(current_page === "profil_wilayah") {
+    $edit_mode = $("#edit_mode");
+    $edit_mode.on("change",function(ev){
+        $("#edit_form input,#edit_form textarea,#edit_form button").prop("disabled",!this.checked);
+    });
+    $triwulan = $("#triwulan");
+    $triwulan.on("change",function(){
+        console.log(1);
+        window.location.href = base_url("panel/profil_wilayah/" + $(this).val());
+    });
+}
 
 
 /* ---- General for semua halaman ----*/
 
 $.getJSON(base_url("/panel/ambil_flash_notif"),function(response){
-    console.log(response);
     for(var item in response) {
         if(response.hasOwnProperty(item)) {
             var status = (item.split("_")[item.split("_").length - 1] === "error") ? "bg-red" : "bg-green";
             showNotification(status,response[item],"bottom","center");
         }
     }
+});
+
+$(function () {
+    //Advanced Form Validation
+    $('#form_advanced_validation').validate({
+        rules: {
+            'date': {
+                customdate: true
+            },
+            'creditcard': {
+                creditcard: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        }
+    });
+
+    //==================================================================================================
 });

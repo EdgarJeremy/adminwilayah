@@ -50,7 +50,7 @@
             if(dir === undefined)
                 return "<?php echo base_url();?>";
             else
-                return "<?php echo base_url();?>" + "/" + dir;
+                return "<?php echo base_url();?>" + dir;
         };
         window.current_page = "<?php echo $this->uri->segment(2); ?>";
     </script>
@@ -317,7 +317,7 @@
                 <div class="email">
                     <?php
                     if($this->session->userdata("level") == "Pala") {
-                        echo $this->session->userdata("level") . " " . $this->session->userdata("nama_kelurahan");
+                        echo $this->session->userdata("level") . " " . $this->session->userdata("nama_kelurahan")." ".$this->session->userdata("nama_lingkungan");
                     } else if($this->session->userdata("level") == "Lurah") {
                         echo $this->session->userdata("level") . " " . $this->session->userdata("nama_kelurahan");
                     } else if($this->session->userdata("level") == "Camat") {
@@ -402,10 +402,18 @@
                     </ul>
                 </li>
                 <li class="<?php echo $menu["wilayah"]["current"];?>">
-                    <a href="#">
+                    <a href="javascript:void(0);" class="menu-toggle">
                         <i class="material-icons">map</i>
                         <span>Wilayah</span>
                     </a>
+                    <ul class="ml-menu">
+                        <li class="<?php echo $menu["wilayah"]["childs"]["profil_wilayah"];?>">
+                            <a href="<?php echo base_url("/panel/profil_wilayah/"); ?>">Profil Wilayah</a>
+                        </li>
+                        <li class="<?php echo $menu["wilayah"]["childs"]["permasalahan_wilayah"];?>">
+                            <a href="javascript:void(0);">Permasalahan Wilayah</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="<?php echo $menu["pengguna"]["current"];?>">
                     <a href="javascript:void(0);" class="menu-toggle">

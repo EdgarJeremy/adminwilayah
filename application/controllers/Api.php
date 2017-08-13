@@ -6,7 +6,7 @@ class Api extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-//        header('Content-Type: application/json');
+        header("Content-Type: application/json;charset=utf-8");
         $this->load->model('Penduduk_model');
         $this->load->model('Keluarga_model');
         $this->load->model('Pekerjaan_model');
@@ -14,6 +14,7 @@ class Api extends CI_Controller {
         $this->load->model('Golongan_darah_model');
         $this->load->model('Hubungan_keluarga_model');
         $this->load->model('Status_kawin_model');
+        $this->load->model("Wilayah_model","wilayah");
     }
 
     public function ambil_penduduk($limit=20,$offset=0){
@@ -174,7 +175,7 @@ class Api extends CI_Controller {
     public function ambil_status_kawin_by_id($id){
         $data = $this->Status_kawin_model->ambil_status_kawin_by_id($id);
         $data = json_encode($data);
-        echo $data;
+        echo $data;;
     }
 
     public function hitung_status_kawin(){
@@ -188,4 +189,36 @@ class Api extends CI_Controller {
         $data = json_encode($data);
         echo $data;
     }
+
+    public function ambil_struktur_profil() {
+        $data = $this->db->field_data("profil");
+        echo json_encode($data);
+    }
+
+    public function ambil_profil() {
+        $get = $this->input->get();
+        if(isset($get["tipe"]) && isset($get["idwilayah"])) {
+            switch (strtolower($get["tipe"])) {
+                case "kecamatan":
+                    $level = "Camat";
+                    break;
+                case "kelurahan":
+                    $level = "Lurah";
+                    break;
+                case "lingkungan":
+                    $level = "Pala";
+                    break;
+                default:
+                    $level = null;
+                    break;
+            }
+            $triwulan = ceil(date("m",time())/3);
+            $data = $this->wilayah->ambil_profil_wilayah($get["idwilayah"],$level,$triwulan);
+            echo json_encode($data);
+        } else {
+            echo json_encode(array("status"=>false,"msg"=>"GET parameter tidak cukup"));
+        }
+
+    }
+
 }
