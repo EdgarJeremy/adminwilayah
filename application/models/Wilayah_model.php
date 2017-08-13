@@ -56,7 +56,13 @@ class Wilayah_model extends CI_Model
                 $table = "lingkungan";
                 $field = "idlingkungan";
                 break;
+            default:
+                $table = null;
+                $field = null;
+                break;
         }
+        if($table == null || $field == null) return false;
+
         $idwilayah = ($idwilayah == null) ? $this->session->userdata($field) : $idwilayah;
         return $this
             ->db
@@ -98,11 +104,13 @@ class Wilayah_model extends CI_Model
         $triwulan,
         $idkecamatan = null,
         $idkelurahan = null,
-        $idlingkungan = null
+        $idlingkungan = null,
+        $idpengguna = null
     ) {
         $idkecamatan = ($idkecamatan == null) ? $this->session->userdata("idkecamatan") : $idkecamatan;
         $idkelurahan = ($idkelurahan == null) ? $this->session->userdata("idkelurahan") : $idkelurahan;
         $idlingkungan = ($idlingkungan == null) ? $this->session->userdata("idlingkungan") : $idlingkungan;
+        $idpengguna = ($idpengguna == null) ? $this->session->userdata("id_pengguna") : $idpengguna;
         $row_before = $this
             ->db
             ->from("profil")
@@ -146,6 +154,7 @@ class Wilayah_model extends CI_Model
                     "idkecamatan" => $idkecamatan,
                     "idkelurahan" => $idkelurahan,
                     "idlingkungan" => $idlingkungan,
+                    "id_pengguna" => $idpengguna,
                     "triwulan" => $triwulan,
                     "tahun" => date("Y",time())
                 ]);
@@ -183,7 +192,8 @@ class Wilayah_model extends CI_Model
                     "desc_kws_proteksi_kebakaran" => $desc_kws_proteksi_kebakaran,
                     "jln_akses_pemadam" => $jln_akses_pemadam,
                     "desc_jln_akses_pemadam" => $desc_jln_akses_pemadam,
-                    "desc_permasalahan_utama" => $desc_permasalahan_utama
+                    "desc_permasalahan_utama" => $desc_permasalahan_utama,
+                    "id_pengguna" => $idpengguna
                 ]);
         }
 

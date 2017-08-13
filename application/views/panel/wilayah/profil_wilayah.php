@@ -250,7 +250,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <h4>Permasalahan Utama</h4>
+                                                <h4>Permasalahan Utama (Enter untuk data baru)</h4>
                                                 <div class="input-group input-group-lg">
                                                     <div class="form-line">
                                                 <textarea name="desc_permasalahan_utama" rows="4" class="form-control no-resize"
