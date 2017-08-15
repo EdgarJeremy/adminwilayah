@@ -268,14 +268,16 @@ class Panel extends CI_Controller
 
             });
         });
+        /*--------------------------------------*/
+        /*---------- END form input submit ---------*/
 
         $config = Array(
             "menu" => $this->active_menu("pengguna","input_pengguna"),
             "title" => "Input Pengguna"
         );
 
-        $this->load->view("panel/include/frame");
-//        $this->load->view("panel/");
+        $this->load->view("panel/include/frame",$config);
+        $this->load->view("panel/pengguna/input_pengguna");
         $this->load->view("panel/include/footer");
 
     }

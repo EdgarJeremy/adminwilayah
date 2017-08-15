@@ -174,6 +174,41 @@ if(current_page === "profil_wilayah") {
     });
 }
 
+/* Input Pengguna */
+if(current_page === "input_pengguna") {
+    $level = $("#level");
+    $kecamatan_container = $("#kecamatan_container");
+    $kelurahan_container = $("#kelurahan_container");
+    $lingkungan_container = $("#lingkungan_container");
+    $kecamatan = $("#kecamatan");
+    $kelurahan = $("#kelurahan");
+    $lingkungan = $("#lingkungan");
+
+    $kecamatan_container.hide();
+    $kelurahan_container.hide();
+    $lingkungan_container.hide();
+
+    $level.on("change",function(){
+        var level = $(this).val();
+        if(level === "Pala") {
+            $kecamatan_container.show();
+            $kelurahan_container.show();
+            $lingkungan_container.show();
+        } else if(level === "Lurah") {
+            $kecamatan_container.show();
+            $kelurahan_container.show();
+            $lingkungan_container.hide();
+        } else if(level === "Camat") {
+            $kecamatan_container.show();
+            $kelurahan_container.hide();
+            $lingkungan_container.hide();
+        } else {
+            $kecamatan_container.hide();
+            $kelurahan_container.hide();
+            $lingkungan_container.hide();
+        }
+    });
+}
 
 /* ---- General for semua halaman ----*/
 
