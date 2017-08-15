@@ -40,6 +40,19 @@ if(!function_exists("berisi")) {
     }
 }
 
+if(!function_exists("permit")) {
+    function permit($levels,$b = true) {
+        $ci = &get_instance();
+        $session_level = $ci->session->userdata("level");
+        $modul_name = ucwords(str_replace("_"," ",$ci->router->method));
+        if(in_array($session_level,$levels) != $b) {
+            set_flash_notif("akses_error","Modul ".$modul_name." tidak bisa diakses dengan level login anda");
+            redirect(base_url("/panel/"));
+            exit();
+        }
+    }
+}
+
 if(!function_exists("sendJSON")) {
     function sendJSON($data) {
         header("Content-Type: application/json;charset=utf-8");
