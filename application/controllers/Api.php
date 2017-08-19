@@ -20,6 +20,21 @@ class Api extends CI_Controller {
         $this->load->model("Wilayah_model","wilayah");
     }
 
+    public function ambil_kecamatan() {
+        $data = $this->wilayah->ambil_kecamatan();
+        echo json_encode($data);
+    }
+
+    public function ambil_kelurahan($idkecamatan) {
+        $data = $this->wilayah->ambil_kelurahan($idkecamatan);
+        echo json_encode($data);
+    }
+
+    public function ambil_lingkungan($idkelurahan) {
+        $data = $this->wilayah->ambil_lingkungan($idkelurahan);
+        echo json_encode($data);
+    }
+
     public function ambil_penduduk($limit=20,$offset=0){
         $data = $this->Penduduk_model->ambil_penduduk($limit,$offset);
         $data = json_encode($data);

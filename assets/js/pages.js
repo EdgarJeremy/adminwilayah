@@ -174,6 +174,194 @@ if(current_page === "profil_wilayah") {
     });
 }
 
+/* Daftar Pengguna */
+if(current_page === "daftar_pengguna") {
+    $("#enter_search_input").on("keyup", function (ev) {
+        var $form = $("#search_value_form");
+        var val = $form.find("input").val($(this).val()).val();
+        if (ev.keyCode === 13) {
+            $form.submit();
+        }
+    });
+}
+
+/* Detail Pengguna */
+if(current_page === "detail_pengguna") {
+    $level = $("#level");
+    $kecamatan_container = $("#kecamatan_container");
+    $kelurahan_container = $("#kelurahan_container");
+    $lingkungan_container = $("#lingkungan_container");
+    $kecamatan = $("#kecamatan");
+    $kelurahan = $("#kelurahan");
+    $lingkungan = $("#lingkungan");
+    $input_pengguna_form = $("#input_pengguna_form");
+
+    $kecamatan_container.hide();
+    $kelurahan_container.hide();
+    $lingkungan_container.hide();
+
+    var idkecamatan = $("#idkecamatan").val(),
+        idkelurahan = $("#idkelurahan").val(),
+        idlingkungan = $("#idlingkungan").val();
+
+    if($level.val() === "Pala") {
+        config_pala(true);
+    } else if($level.val() === "Lurah") {
+        config_lurah(true);
+    } else if($level.val() === "Camat") {
+        config_camat();
+    } else {
+        $kecamatan_container.hide();
+        $kelurahan_container.hide();
+        $lingkungan_container.hide();
+        $kecamatan.prop("disabled",true);
+        $kelurahan.prop("disabled",true);
+        $lingkungan.prop("disabled",true);
+    }
+
+
+    $level.on("change",function(){
+        $kecamatan_container.hide();
+        $kelurahan_container.hide();
+        $lingkungan_container.hide();
+        $kecamatan.html("").off("change");
+        $kelurahan.html("").off("change");
+        $lingkungan.html("").off("change");
+
+        var level = $(this).val();
+        if(level === "Pala") {
+            config_pala(false);
+        } else if(level === "Lurah") {
+            config_lurah(false);
+        } else if(level === "Camat") {
+            config_camat();
+        } else {
+            $kecamatan_container.hide();
+            $kelurahan_container.hide();
+            $lingkungan_container.hide();
+            $kecamatan.prop("disabled",true);
+            $kelurahan.prop("disabled",true);
+            $lingkungan.prop("disabled",true);
+        }
+    });
+
+    function config_camat() {
+        $kecamatan_container.show();
+        $kecamatan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+        $.getJSON(base_url("api/ambil_kecamatan/"),function(res){
+            $kecamatan.html("")
+                .append("<option value=''>Pilih</option>");
+            res.forEach(function(item,index){
+                var st = (item.idkecamatan === idkecamatan) ? "selected" : "";
+                $kecamatan
+                    .append("<option value='"+item.idkecamatan+"' "+st+">"+item.nama_kecamatan+"</option>");
+
+            });
+            $kecamatan.selectpicker("destroy");
+            $kecamatan.selectpicker();
+        });
+
+        $kecamatan.prop("disabled",false).prop("required",true);
+        $kelurahan.prop("disabled",true);
+        $lingkungan.prop("disabled",true);
+    }
+    function config_lurah(t) {
+        $kecamatan_container.show();
+        $kecamatan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+        $.getJSON(base_url("api/ambil_kecamatan/"),function(res){
+            $kecamatan.html("")
+                .append("<option value=''>Pilih</option>");
+            res.forEach(function(item,index){
+                var st = (item.idkecamatan === idkecamatan) ? "selected" : "";
+                $kecamatan
+                    .append("<option value='"+item.idkecamatan+"' "+st+">"+item.nama_kecamatan+"</option>");
+
+            });
+            $kecamatan.selectpicker("destroy");
+            $kecamatan.selectpicker();
+            $kecamatan.on("change",function(){
+                $kelurahan_container.show();
+                var idkecamatan = $(this).val();
+                $kelurahan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+                $.getJSON(base_url("api/ambil_kelurahan/"+idkecamatan),function(res2){
+                    $kelurahan.html("")
+                        .append("<option value=''></option>");
+                    res2.forEach(function(item,index){
+                        var st = (item.idkelurahan === idkelurahan) ? "selected" : "";
+                        $kelurahan
+                            .append("<option value='"+item.idkelurahan+"' "+st+">"+item.nama_kelurahan+"</option>");
+                    });
+                    $kelurahan.selectpicker("destroy");
+                    $kelurahan.selectpicker();
+                })
+            });
+            if(t)
+                $kecamatan.trigger("change");
+        });
+
+        $kecamatan.prop("disabled",false).prop("required",true);
+        $kelurahan.prop("disabled",false).prop("required",true);
+        $lingkungan.prop("disabled",true);
+    }
+    function config_pala(t) {
+        $kecamatan_container.show();
+        $kecamatan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+        $.getJSON(base_url("api/ambil_kecamatan/"),function(res){
+            $kecamatan.html("")
+                .append("<option value=''>Pilih</option>");
+            res.forEach(function(item,index){
+                var st = (item.idkecamatan === idkecamatan) ? "selected" : "";
+                $kecamatan
+                    .append("<option value='"+item.idkecamatan+"' "+st+">"+item.nama_kecamatan+"</option>");
+
+            });
+            $kecamatan.selectpicker("destroy");
+            $kecamatan.selectpicker();
+            $kecamatan.on("change",function(){
+                $kelurahan_container.show();
+                var idkecamatan = $(this).val();
+                $kelurahan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+                $.getJSON(base_url("api/ambil_kelurahan/"+idkecamatan),function(res2){
+                    $kelurahan.html("")
+                        .append("<option value=''></option>");
+                    res2.forEach(function(item,index){
+                        var st = (item.idkelurahan === idkelurahan) ? "selected" : "";
+                        $kelurahan
+                            .append("<option value='"+item.idkelurahan+"' "+st+">"+item.nama_kelurahan+"</option>");
+                    });
+                    $kelurahan.selectpicker("destroy");
+                    $kelurahan.selectpicker();
+                    $kelurahan.on("change",function(){
+                        $lingkungan_container.show();
+                        var idkelurahan = $(this).val();
+                        $lingkungan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+                        $.getJSON(base_url("api/ambil_lingkungan/"+idkelurahan),function(res3){
+                            $lingkungan.html("")
+                                .append("<option value=''></option>");
+                            res3.forEach(function(item,index){
+                                var st = (item.idlingkungan === idlingkungan) ? "selected" : "";
+                                $lingkungan
+                                    .append("<option value='"+item.idlingkungan+"' "+st+">"+item.nama_lingkungan+"</option>");
+                            });
+                            $lingkungan.selectpicker("destroy");
+                            $lingkungan.selectpicker();
+                        });
+                    });
+                    if(t)
+                        $kelurahan.trigger("change");
+                })
+            });
+            if(t)
+                $kecamatan.trigger("change");
+        });
+
+        $kecamatan.prop("disabled",false).prop("required",true);
+        $kelurahan.prop("disabled",false).prop("required",true);
+        $lingkungan.prop("disabled",false).prop("required",true);
+    }
+
+}
+
 /* Input Pengguna */
 if(current_page === "input_pengguna") {
     $level = $("#level");
@@ -183,29 +371,149 @@ if(current_page === "input_pengguna") {
     $kecamatan = $("#kecamatan");
     $kelurahan = $("#kelurahan");
     $lingkungan = $("#lingkungan");
+    $input_pengguna_form = $("#input_pengguna_form");
 
     $kecamatan_container.hide();
     $kelurahan_container.hide();
     $lingkungan_container.hide();
 
     $level.on("change",function(){
+        $kecamatan_container.hide();
+        $kelurahan_container.hide();
+        $lingkungan_container.hide();
+        $kecamatan.html("").off("change");
+        $kelurahan.html("").off("change");
+        $lingkungan.html("").off("change");
+
         var level = $(this).val();
         if(level === "Pala") {
-            $kecamatan_container.show();
-            $kelurahan_container.show();
-            $lingkungan_container.show();
+            config_pala();
         } else if(level === "Lurah") {
-            $kecamatan_container.show();
-            $kelurahan_container.show();
-            $lingkungan_container.hide();
+            config_lurah();
         } else if(level === "Camat") {
-            $kecamatan_container.show();
-            $kelurahan_container.hide();
-            $lingkungan_container.hide();
+            config_camat();
         } else {
             $kecamatan_container.hide();
             $kelurahan_container.hide();
             $lingkungan_container.hide();
+            $kecamatan.prop("disabled",true);
+            $kelurahan.prop("disabled",true);
+            $lingkungan.prop("disabled",true);
+        }
+    });
+
+    function config_camat() {
+        $kecamatan_container.show();
+        $kecamatan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+        $.getJSON(base_url("api/ambil_kecamatan/"),function(res){
+            $kecamatan.html("")
+                .append("<option value=''>Pilih</option>");
+            res.forEach(function(item,index){
+                $kecamatan
+                    .append("<option value='"+item.idkecamatan+"'>"+item.nama_kecamatan+"</option>");
+
+            });
+            $kecamatan.selectpicker("destroy");
+            $kecamatan.selectpicker();
+        });
+
+        $kecamatan.prop("disabled",false).prop("required",true);
+        $kelurahan.prop("disabled",true);
+        $lingkungan.prop("disabled",true);
+    }
+    function config_lurah() {
+        $kecamatan_container.show();
+        $kecamatan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+        $.getJSON(base_url("api/ambil_kecamatan/"),function(res){
+            $kecamatan.html("")
+                .append("<option value=''>Pilih</option>");
+            res.forEach(function(item,index){
+                $kecamatan
+                    .append("<option value='"+item.idkecamatan+"'>"+item.nama_kecamatan+"</option>");
+
+            });
+            $kecamatan.selectpicker("destroy");
+            $kecamatan.selectpicker();
+            $kecamatan.on("change",function(){
+                $kelurahan_container.show();
+                var idkecamatan = $(this).val();
+                $kelurahan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+                $.getJSON(base_url("api/ambil_kelurahan/"+idkecamatan),function(res2){
+                    $kelurahan.html("")
+                        .append("<option value=''></option>");
+                    res2.forEach(function(item,index){
+                        $kelurahan
+                            .append("<option value='"+item.idkelurahan+"'>"+item.nama_kelurahan+"</option>");
+                    });
+                    $kelurahan.selectpicker("destroy");
+                    $kelurahan.selectpicker();
+                })
+            });
+        });
+
+        $kecamatan.prop("disabled",false).prop("required",true);
+        $kelurahan.prop("disabled",false).prop("required",true);
+        $lingkungan.prop("disabled",true);
+    }
+    function config_pala() {
+        $kecamatan_container.show();
+        $kecamatan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+        $.getJSON(base_url("api/ambil_kecamatan/"),function(res){
+            $kecamatan.html("")
+                .append("<option value=''>Pilih</option>");
+            res.forEach(function(item,index){
+                $kecamatan
+                    .append("<option value='"+item.idkecamatan+"'>"+item.nama_kecamatan+"</option>");
+
+            });
+            $kecamatan.selectpicker("destroy");
+            $kecamatan.selectpicker();
+            $kecamatan.on("change",function(){
+                $kelurahan_container.show();
+                var idkecamatan = $(this).val();
+                $kelurahan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+                $.getJSON(base_url("api/ambil_kelurahan/"+idkecamatan),function(res2){
+                    $kelurahan.html("")
+                        .append("<option value=''></option>");
+                    res2.forEach(function(item,index){
+                        $kelurahan
+                            .append("<option value='"+item.idkelurahan+"'>"+item.nama_kelurahan+"</option>");
+                    });
+                    $kelurahan.selectpicker("destroy");
+                    $kelurahan.selectpicker();
+                    $kelurahan.on("change",function(){
+                        $lingkungan_container.show();
+                        var idkelurahan = $(this).val();
+                        $lingkungan.html("<option value='null'>Loading..</option>").selectpicker("refresh");
+                        $.getJSON(base_url("api/ambil_lingkungan/"+idkelurahan),function(res3){
+                            $lingkungan.html("")
+                                .append("<option value=''></option>");
+                            res3.forEach(function(item,index){
+                                $lingkungan
+                                    .append("<option value='"+item.idlingkungan+"'>"+item.nama_lingkungan+"</option>");
+                            });
+                            $lingkungan.selectpicker("destroy");
+                            $lingkungan.selectpicker();
+                        });
+                    });
+                })
+            });
+        });
+
+        $kecamatan.prop("disabled",false).prop("required",true);
+        $kelurahan.prop("disabled",false).prop("required",true);
+        $lingkungan.prop("disabled",false).prop("required",true);
+    }
+
+    $input_pengguna_form.on("submit",function(ev){
+        $password = $("#input_pengguna_form input[name='password']");
+        $cpassword = $("#input_pengguna_form input[name='cpassword']");
+        if($password.val() !== $cpassword.val()) {
+            ev.preventDefault();
+            showNotification("bg-red","Isi ulang password dengan benar!","center","center");
+            $cpassword.focus();
+        } else {
+            $cpassword.prop("disabled",true);
         }
     });
 }

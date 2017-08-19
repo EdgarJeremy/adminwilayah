@@ -40,7 +40,7 @@ $.AdminBSB.options = {
         effectIn: 'fadeIn',
         effectOut: 'fadeOut'
     }
-}
+};
 
 /* Left Sidebar - Function =================================================================================================
  *  You can manage the left sidebar menu options
@@ -473,7 +473,7 @@ $(function () {
     $.AdminBSB.dropdownMenu.activate();
     $.AdminBSB.input.activate();
     $.AdminBSB.select.activate();
-    // $.AdminBSB.search.activate();
+    $.AdminBSB.search.activate();
 
     setTimeout(function () {
         $('.page-loader-wrapper').fadeOut();

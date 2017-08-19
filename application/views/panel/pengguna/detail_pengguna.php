@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Tambah pengguna baru dalam sistem
+                            <?php echo $pengguna->nama_lengkap; ?>
                         </h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
@@ -39,7 +39,7 @@
                                                 <i class="material-icons">perm_identity</i>
                                             </span>
                                                     <div class="form-line">
-                                                        <input name="nama_lengkap" type="text" class="form-control"
+                                                        <input name="nama_lengkap" type="text" class="form-control" value="<?php echo $pengguna->nama_lengkap; ?>"
                                                                required>
                                                     </div>
                                                 </div>
@@ -51,7 +51,7 @@
                                                 <i class="material-icons">verified_user</i>
                                             </span>
                                                     <div class="form-line">
-                                                        <input name="username" type="text" class="form-control"
+                                                        <input name="username" type="text" class="form-control" value="<?php echo $pengguna->username; ?>"
                                                                required>
                                                     </div>
                                                 </div>
@@ -63,7 +63,7 @@
                                                 <i class="material-icons">email</i>
                                             </span>
                                                     <div class="form-line">
-                                                        <input name="email" type="email" class="form-control"
+                                                        <input name="email" type="email" class="form-control" value="<?php echo $pengguna->email; ?>"
                                                                required>
                                                     </div>
                                                 </div>
@@ -75,8 +75,7 @@
                                                 <i class="material-icons">lock</i>
                                             </span>
                                                     <div class="form-line">
-                                                        <input name="password" type="password" class="form-control"
-                                                               required>
+                                                        <input name="password" type="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah">
                                                     </div>
                                                 </div>
                                             </div>
@@ -87,7 +86,7 @@
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
                                                     <div class="form-line">
-                                                        <input name="cpassword" type="password" class="form-control"
+                                                        <input name="cpassword" type="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah"
                                                                required>
                                                     </div>
                                                 </div>
@@ -103,10 +102,10 @@
                                                     <div class="form-line">
                                                         <select class="form-control show-tick" id="level" name="level" data-live-search="true" required>
                                                             <option value=""></option>
-                                                            <option value="Pala">Pala (Lingkungan)</option>
-                                                            <option value="Lurah">Lurah (Kelurahan)</option>
-                                                            <option value="Camat">Camat (Kecamatan)</option>
-                                                            <option value="System Administrator">System Administrator</option>
+                                                            <option value="Pala" <?php echo ($pengguna->level == "Pala") ? "selected" : ""; ?>>Pala (Lingkungan)</option>
+                                                            <option value="Lurah" <?php echo ($pengguna->level == "Lurah") ? "selected" : ""; ?>>Lurah (Kelurahan)</option>
+                                                            <option value="Camat" <?php echo ($pengguna->level == "Camat") ? "selected" : ""; ?>>Camat (Kecamatan)</option>
+                                                            <option value="System Administrator" <?php echo ($pengguna->level == "System Administrator") ? "selected" : ""; ?>>System Administrator</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -119,7 +118,7 @@
                                             </span>
                                                     <div class="form-line">
                                                         <div class="switch">
-                                                            <label>Suspend<input type="checkbox" name="aktif" id="aktif"><span class="lever"></span>Aktif</label>
+                                                            <label>Suspend<input type="checkbox" name="aktif" id="aktif" <?php echo ($pengguna->aktif == 1) ? "checked" : ""; ?>><span class="lever"></span>Aktif</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -162,6 +161,11 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="form-group" style="display: none;">
+                                                <input type="hidden" id="idkecamatan" value="<?php echo $pengguna->idkecamatan ?>">
+                                                <input type="hidden" id="idkelurahan" value="<?php echo $pengguna->idkelurahan ?>">
+                                                <input type="hidden" id="idlingkungan" value="<?php echo $pengguna->idlingkungan ?>">
                                             </div>
                                             <div class="form-group">
                                                 <button name="btnSubmit" class="btn btn-primary bg-blue" type="submit">SIMPAN</button>

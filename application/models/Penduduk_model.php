@@ -59,7 +59,6 @@ class Penduduk_model extends CI_Model{
             ->row();
     }
 
-
     public function ambil_penduduk_by_no_ktp($no_ktp){
         return $this->db
 			->select('id_penduduk,penduduk.id_agama,penduduk.id_pekerjaan,penduduk.id_status_kawin,nama,no_ktp,tempat_lahir,tanggal_lahir,jenis_kelamin,no_kk,nama_kecamatan,nama_kelurahan,nama_pekerjaan,nama_agama,nama_pendidikan,nama_golongan_darah,nama_hubungan_keluarga,nama_status_kawin')
@@ -141,7 +140,7 @@ class Penduduk_model extends CI_Model{
 		$nama, 
 		$no_ktp, 
 		$tempat_lahir, 
-		$tanggal_lahir, 
+		$tanggal_lahir,
 		$jenis_kelamin, 
 		$no_kk, 
 		$id_agama, 
