@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2017 at 04:00 PM
--- Server version: 10.1.25-MariaDB
--- PHP Version: 5.6.31
+-- Generation Time: Aug 20, 2017 at 09:08 AM
+-- Server version: 10.1.21-MariaDB
+-- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -4850,8 +4848,11 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `nama_lengkap`, `username`, `password`, `aktif`, `email`, `level`, `idlingkungan`, `idkelurahan`, `idkecamatan`) VALUES
-(3, 'Imanuel Pundoko', 'ilomon', '49ca37fa89db670aaf397d7c3dfe4d69', 1, 'ilomon10@gmail.com', 'Pala', 208, 35, 4),
-(6, 'Boby Najoan', 'bnajoan', '62232168cd10631e11dc76d0f004e4d2', 1, 'bnajoan@gmail.com', 'Lurah', NULL, 35, 4);
+(3, 'Imanuel Pundoko', 'ilomon', 'fcbdc2f8023f8ed68dda0ee0ae7d6185', 0, 'ilomon10@gmail.com', 'Camat', NULL, NULL, 1),
+(6, 'Boby Najoan', 'bnajoan', '62232168cd10631e11dc76d0f004e4d2', 1, 'bnajoan@gmail.com', 'Lurah', NULL, 35, 4),
+(7, 'EdgarJeremy', 'edgar', '7f7d47f1ff6bf26a221b21ae3bde1074', 1, 'edgarpontoh3141@gmail.com', 'System Administrator', NULL, NULL, NULL),
+(8, 'David Noya', 'davidnoya', '6bb05f908456219af548994c1c14081b', 1, 'davidnoya1011@gmail.com', 'System Administrator', NULL, NULL, NULL),
+(9, 'Marthen Senewe', 'ateng', 'b1923bfe1802e1a64a0770c6c342cd20', 1, 'marheda91@gmail.com', 'Pala', 190, 31, 4);
 
 -- --------------------------------------------------------
 
@@ -5067,7 +5068,7 @@ ALTER TABLE `penduduk`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `profil`
 --
@@ -5120,7 +5121,6 @@ ALTER TABLE `profil`
   ADD CONSTRAINT `fk_profil_kelurahan1` FOREIGN KEY (`idkelurahan`) REFERENCES `kelurahan` (`idkelurahan`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_profil_lingkungan1` FOREIGN KEY (`idlingkungan`) REFERENCES `lingkungan` (`idlingkungan`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_profil_pengguna1` FOREIGN KEY (`id_pengguna`) REFERENCES `pengguna` (`id_pengguna`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

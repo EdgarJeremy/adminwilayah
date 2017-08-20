@@ -30,6 +30,7 @@
                         <div class="row clearfix">
                             <div class="container-fluid">
                                 <form action="" method="post" id="input_pengguna_form">
+                                    <input type="hidden" name="id_pengguna" value="<?php echo $this->uri->segment(3); ?>">
                                     <div class="row clearfix">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -86,8 +87,7 @@
                                                 <i class="material-icons">lock_outline</i>
                                             </span>
                                                     <div class="form-line">
-                                                        <input name="cpassword" type="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah"
-                                                               required>
+                                                        <input name="cpassword" type="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah">
                                                     </div>
                                                 </div>
                                             </div>

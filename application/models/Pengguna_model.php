@@ -63,6 +63,45 @@ class Pengguna_model extends CI_Model {
             ));
     }
 
+    public function edit_pengguna($id_pengguna,$nama_lengkap,$username,$email,$password,$level,$aktif,$idkecamatan,$idkelurahan,$idlingkungan) {
+        if($this
+                ->db
+                ->select("username")
+                ->from("pengguna")
+                ->where("username",$username)
+                ->where("id_pengguna !=",$id_pengguna)
+                ->get()->num_rows() > 0) {
+            return "username";
+        }
+        if($this
+                ->db
+                ->select("email")
+                ->from("pengguna")
+                ->where("email",$email)
+                ->where("id_pengguna !=",$id_pengguna)
+                ->get()->num_rows() > 0) {
+            return "email";
+        }
+        $dataUpdate = array(
+            "nama_lengkap" => $nama_lengkap,
+            "username" => $username,
+            "email" => $email,
+            "password" => md5($password),
+            "level" => $level,
+            "aktif" => $aktif,
+            "idkecamatan" => $idkecamatan,
+            "idkelurahan" => $idkelurahan,
+            "idlingkungan" => $idlingkungan
+        );
+        if($password == null)
+            unset($dataUpdate["password"]);
+
+        return $this
+            ->db
+            ->where("id_pengguna",$id_pengguna)
+            ->update("pengguna",$dataUpdate);
+    }
+
     public function ambil_pengguna($limit,$offset) {
         $cari = $this->input->get("q");
         return $this
@@ -120,6 +159,15 @@ class Pengguna_model extends CI_Model {
             ->where("pengguna.id_pengguna",$id_pengguna)
             ->get("pengguna")
             ->row();
+    }
+
+    public function update_status($status,$id_pengguna) {
+        return $this
+            ->db
+            ->where("id_pengguna",$id_pengguna)
+            ->update("pengguna",array(
+                "aktif" => (int) $status
+            ));
     }
 
     public function hitung_pengguna() {

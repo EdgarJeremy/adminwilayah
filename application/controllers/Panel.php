@@ -24,7 +24,7 @@ class Panel extends CI_Controller
         $this->load->model("Penduduk_model", "penduduk");
         $this->load->model("Status_kawin_model", "status_kawin");
         $this->load->model("Wilayah_model", "wilayah");
-        $this->load->model("Pengguna_model","pengguna");
+        $this->load->model("Pengguna_model", "pengguna");
         $this->load->library("pagination");
     }
 
@@ -166,7 +166,7 @@ class Panel extends CI_Controller
 
     public function profil_wilayah($triwulan = null)
     {
-        permit(["System Administrator"],false);
+        permit(["System Administrator"], false);
         $triwulan = ($triwulan == null) ? ceil(date("m", time()) / 3) : $triwulan;
         if ($triwulan > 4 || $triwulan < 1) {
             set_flash_notif("input_error", "triwulan tidak valid!");
@@ -259,52 +259,141 @@ class Panel extends CI_Controller
         $this->load->view("panel/include/footer");
     }
 
-    public function daftar_pengguna($page = 0) {
-        permit(["System Administrator"],true);
+    public function daftar_pengguna($page = 0)
+    {
+        permit(["System Administrator"], true);
 
         $config = Array(
-            "menu" => $this->active_menu("pengguna","daftar_pengguna"),
+            "menu" => $this->active_menu("pengguna", "daftar_pengguna"),
             "title" => "Daftar Pengguna"
         );
         $jumlahData = $this->pengguna->hitung_pengguna();
-        $pgConfig = $this->get_pagination_config(base_url("/panel/daftar_pengguna/"),$jumlahData);
+        $pgConfig = $this->get_pagination_config(base_url("/panel/daftar_pengguna/"), $jumlahData);
         $this->pagination->initialize($pgConfig);
 
-        $data = $this->pengguna->ambil_pengguna($pgConfig["per_page"],$page);
+        $data = $this->pengguna->ambil_pengguna($pgConfig["per_page"], $page);
 
-        $this->load->view("panel/include/frame",$config);
-        $this->load->view("panel/pengguna/daftar_pengguna",compact("data"));
+        $this->load->view("panel/include/frame", $config);
+        $this->load->view("panel/pengguna/daftar_pengguna", compact("data"));
         $this->load->view("panel/include/footer");
     }
 
-    public function detail_pengguna($id_pengguna = null) {
-        permit(["System Administrator"],true);
-        if($id_pengguna == null)
+    public function detail_pengguna($id_pengguna = null)
+    {
+        permit(["System Administrator"], true);
+        /*---------- Form input submit ---------*/
+        /*--------------------------------------*/
+        $this->onButtonSubmit(function () {
+            $this->onPostInvalid([
+                "nama_lengkap",
+                "username",
+                "email",
+                "level"
+            ], function ($invalidKey) {
+                set_flash_notif("form_error", "Field " . $invalidKey . " harus diisi!");
+                redirect(base_url("/panel/detail_pengguna/" . $_POST["id_pengguna"]));
+            });
+            $post = $this->input->post();
+            $post["aktif"] = isset($post["aktif"]) ? true : false;
+            echo "<pre>";
+            // Filter level dan kecocokan wilayah
+            switch ($post["level"]) {
+                case "Pala" :
+                    if (!berisi($post["idkecamatan"]) || !berisi($post["idkelurahan"]) || !berisi($post["idlingkungan"])) {
+                        set_flash_notif("form_error", "Field tidak lengkap!");
+                        redirect(base_url("/panel/input_pengguna"));
+                    }
+                    break;
+                case "Lurah" :
+                    if (!berisi($post["idkecamatan"]) || !berisi($post["idkelurahan"])) {
+                        set_flash_notif("form_error", "Field tidak lengkap!");
+                        redirect(base_url("/panel/input_pengguna"));
+                    }
+                    $post["idlingkungan"] = null;
+                    break;
+                case "Camat" :
+                    if (!berisi($post["idkecamatan"])) {
+                        set_flash_notif("form_error", "Field tidak lengkap!");
+                        redirect(base_url("/panel/input_pengguna"));
+                    }
+                    $post["idlingkungan"] = null;
+                    $post["idkelurahan"] = null;
+                    break;
+                case "System Administrator" :
+                    $post["idkecamatan"] = null;
+                    $post["idlingkungan"] = null;
+                    $post["idkelurahan"] = null;
+                    break;
+                case "Walikota" :
+                    // TO-DO
+                    break;
+                case "Wakil Walikota" :
+                    // TO-DO
+                    break;
+                default :
+                    break;
+            }
+            $post["password"] = ($post["password"] == "") ? null : $post["password"];
+            $condition = $this->pengguna->edit_pengguna(
+                $post["id_pengguna"],
+                $post["nama_lengkap"],
+                $post["username"],
+                $post["email"],
+                $post["password"],
+                $post["level"],
+                $post["aktif"],
+                $post["idkecamatan"],
+                $post["idkelurahan"],
+                $post["idlingkungan"]
+            );
+            if ($condition === true) {
+                set_flash_notif("form_success", "Data pengguna berhasil diinput!");
+            } elseif ($condition == "username") {
+                set_flash_notif("form_error", "Username " . $post["username"] . " sudah ada!");
+            } else if ($condition == "email") {
+                set_flash_notif("form_error", "Email " . $post["email"] . " sudah ada!");
+            } else {
+                set_flash_notif("form_error", "Data pengguna gagal diinput!");
+            }
+            redirect(base_url("/panel/detail_pengguna/" . $post["id_pengguna"]));
+        });
+        /*--------------------------------------*/
+        /*---------- END form input submit ---------*/
+        permit(["System Administrator"], true);
+        if ($id_pengguna == null)
             redirect(base_url("/panel/daftar_pengguna"));
 
         $config = Array(
-            "menu" => $this->active_menu("pengguna","daftar_pengguna"),
+            "menu" => $this->active_menu("pengguna", "daftar_pengguna"),
             "title" => "Detil Pengguna"
         );
 
         $pengguna = $this->pengguna->ambil_pengguna_by_id($id_pengguna);
-        $this->load->view("panel/include/frame",$config);
-        $this->load->view("panel/pengguna/detail_pengguna",compact("pengguna"));
+        $this->load->view("panel/include/frame", $config);
+        $this->load->view("panel/pengguna/detail_pengguna", compact("pengguna"));
         $this->load->view("panel/include/footer");
     }
 
-    public function input_pengguna() {
+    public function update_status($status,$id_pengguna,$nama_lengkap) {
         permit(["System Administrator"],true);
+        $this->pengguna->update_status($status,$id_pengguna);
+        set_flash_notif("update_success",urldecode($nama_lengkap) . " berhasil " . (($status == 1) ? "diaktifkan" : "disuspend"));
+        redirect(base_url("/panel/daftar_pengguna/"));
+    }
+
+    public function input_pengguna()
+    {
+        permit(["System Administrator"], true);
         /*---------- Form input submit ---------*/
         /*--------------------------------------*/
-        $this->onButtonSubmit(function(){
+        $this->onButtonSubmit(function () {
             $this->onPostInvalid([
                 "nama_lengkap",
                 "username",
                 "email",
                 "password",
                 "level"
-            ],function($invalidKey){
+            ], function ($invalidKey) {
                 set_flash_notif("form_error", "Field " . $invalidKey . " harus diisi!");
                 redirect(base_url("/panel/input_pengguna"));
             });
@@ -314,20 +403,20 @@ class Panel extends CI_Controller
 
             switch ($post["level"]) {
                 case "Pala" :
-                    if(!berisi($post["idkecamatan"]) || !berisi($post["idkelurahan"]) || !berisi($post["idlingkungan"])) {
+                    if (!berisi($post["idkecamatan"]) || !berisi($post["idkelurahan"]) || !berisi($post["idlingkungan"])) {
                         set_flash_notif("form_error", "Field tidak lengkap!");
                         redirect(base_url("/panel/input_pengguna"));
                     }
                     break;
                 case "Lurah" :
-                    if(!berisi($post["idkecamatan"]) || !berisi($post["idkelurahan"])) {
+                    if (!berisi($post["idkecamatan"]) || !berisi($post["idkelurahan"])) {
                         set_flash_notif("form_error", "Field tidak lengkap!");
                         redirect(base_url("/panel/input_pengguna"));
                     }
                     $post["idlingkungan"] = null;
                     break;
                 case "Camat" :
-                    if(!berisi($post["idkecamatan"])) {
+                    if (!berisi($post["idkecamatan"])) {
                         set_flash_notif("form_error", "Field tidak lengkap!");
                         redirect(base_url("/panel/input_pengguna"));
                     }
@@ -361,9 +450,9 @@ class Panel extends CI_Controller
             );
             if ($condition === true) {
                 set_flash_notif("form_success", "Data pengguna berhasil diinput!");
-            } elseif($condition == "username") {
+            } elseif ($condition == "username") {
                 set_flash_notif("form_error", "Username " . $post["username"] . " sudah ada!");
-            } else if($condition == "email") {
+            } else if ($condition == "email") {
                 set_flash_notif("form_error", "Email " . $post["email"] . " sudah ada!");
             } else {
                 set_flash_notif("form_error", "Data pengguna gagal diinput!");
@@ -374,11 +463,11 @@ class Panel extends CI_Controller
         /*---------- END form input submit ---------*/
 
         $config = Array(
-            "menu" => $this->active_menu("pengguna","input_pengguna"),
+            "menu" => $this->active_menu("pengguna", "input_pengguna"),
             "title" => "Input Pengguna"
         );
 
-        $this->load->view("panel/include/frame",$config);
+        $this->load->view("panel/include/frame", $config);
         $this->load->view("panel/pengguna/input_pengguna");
         $this->load->view("panel/include/footer");
 

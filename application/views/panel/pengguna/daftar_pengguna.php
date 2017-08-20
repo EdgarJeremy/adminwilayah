@@ -90,10 +90,10 @@
                                         <a href="<?php echo base_url("/panel/detail_pengguna/" . $pengguna->id_pengguna); ?>"
                                            class="btn waves-effect btn-primary btn-lg">Lihat/Edit</a>
                                         <?php if ($pengguna->aktif == 1): ?>
-                                            <a href="<?php echo base_url(""); ?>"
+                                            <a href="<?php echo base_url("/panel/update_status/0/".$pengguna->id_pengguna."/".$pengguna->nama_lengkap); ?>"
                                                class="btn waves-effect btn-lg bg-amber">Kunci Akun</a>
                                         <?php else: ?>
-                                            <a href="#" class="btn waves-effect btn-lg bg-green">Aktifkan Akun</a>
+                                            <a href="<?php echo base_url("/panel/update_status/1/".$pengguna->id_pengguna."/".$pengguna->nama_lengkap); ?>" class="btn waves-effect btn-lg bg-green">Aktifkan Akun</a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
